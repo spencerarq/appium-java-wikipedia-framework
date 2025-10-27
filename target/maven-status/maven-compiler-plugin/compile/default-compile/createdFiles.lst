@@ -1,0 +1,9 @@
+com\wikipedia\pages\SavedPage.class
+com\wikipedia\commons\CommonActions.class
+com\wikipedia\utils\TestHelper.class
+com\wikipedia\pages\SearchPage.class
+com\wikipedia\pages\ArticlePage.class
+com\wikipedia\utils\ConfigReader.class
+com\wikipedia\pages\SettingsPage.class
+com\wikipedia\utils\LoggerHelper.class
+com\wikipedia\commons\DriverFactory.class

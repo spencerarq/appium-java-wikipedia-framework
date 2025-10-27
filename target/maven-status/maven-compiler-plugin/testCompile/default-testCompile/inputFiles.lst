@@ -1,0 +1,13 @@
+D:\Projetos\appium-java-wikipedia-framework\src\test\java\com\wikipedia\e2e\TC01_SearchArticleE2ETest.java
+D:\Projetos\appium-java-wikipedia-framework\src\test\java\com\wikipedia\e2e\TC02_NoResultsE2ETest.java
+D:\Projetos\appium-java-wikipedia-framework\src\test\java\com\wikipedia\e2e\TC03a_SaveArticleE2ETest.java
+D:\Projetos\appium-java-wikipedia-framework\src\test\java\com\wikipedia\e2e\TC03b_RemoveArticleE2ETest.java
+D:\Projetos\appium-java-wikipedia-framework\src\test\java\com\wikipedia\e2e\TC04_ChangeLanguageE2ETest.java
+D:\Projetos\appium-java-wikipedia-framework\src\test\java\com\wikipedia\e2e\TC05_BackgroundE2ETest.java
+D:\Projetos\appium-java-wikipedia-framework\src\test\java\com\wikipedia\e2e\TC06_RotationE2ETest.java
+D:\Projetos\appium-java-wikipedia-framework\src\test\java\com\wikipedia\e2e\TC07_ScrollE2ETest.java
+D:\Projetos\appium-java-wikipedia-framework\src\test\java\com\wikipedia\unit\CommonActionsUnitTest.java
+D:\Projetos\appium-java-wikipedia-framework\src\test\java\com\wikipedia\unit\ConfigReaderUnitTest.java
+D:\Projetos\appium-java-wikipedia-framework\src\test\java\com\wikipedia\unit\DriverFactoryUnitTest.java
+D:\Projetos\appium-java-wikipedia-framework\src\test\java\com\wikipedia\unit\LoggerHelperUnitTest.java
+D:\Projetos\appium-java-wikipedia-framework\src\test\java\com\wikipedia\unit\TestHelperUnitTest.java
