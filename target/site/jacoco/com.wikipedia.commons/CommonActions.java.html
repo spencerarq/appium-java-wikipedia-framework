@@ -1,5 +1,228 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CommonActions.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Appium Wikipedia Framework - Mobile Test Automation</a> &gt; <a href="index.source.html" class="el_package">com.wikipedia.commons</a> &gt; <span class="el_source">CommonActions.java</span></div><h1>CommonActions.java</h1><pre class="source lang-java linenums">package com.wikipedia.commons;
 
-<span class="nc" id="L3">public class CommonActions {</span>
+import io.appium.java_client.AppiumDriver;
+import org.openqa.selenium.Dimension;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.PointerInput;
+import org.openqa.selenium.interactions.Sequence;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.time.Duration;
+import java.util.Collections;
+
+/**
+ * Classe utilitária que encapsula ações comuns de interação com elementos mobile
+ * usando Appium. Implementa waits explícitos e tratamento robusto de exceções.
+ * @author Renato Spencer
+ * @version 1.4
+ * @since 2025-01-28
+ */
+public class CommonActions {
+
+<span class="fc" id="L25">    private static final Logger logger = LoggerFactory.getLogger(CommonActions.class);</span>
+    private static final int DEFAULT_TIMEOUT_SECONDS = 30;
+    private static final int SWIPE_DURATION_MS = 800;
+
+    private final AppiumDriver driver;
+    private final WebDriverWait wait;
+
+    /**
+     * Construtor Padrão. Inicializa com o driver fornecido e o timeout padrão.
+     * @param driver A instância do AppiumDriver. Não pode ser null.
+     */
+    public CommonActions(AppiumDriver driver) {
+<span class="fc" id="L37">        this(driver, DEFAULT_TIMEOUT_SECONDS);</span>
+<span class="fc" id="L38">    }</span>
+
+    /**
+     * Timeout Customizado.
+     * @param driver A instância do AppiumDriver. Não pode ser null.
+     * @param timeoutSeconds O timeout em segundos para waits explícitos. Deve ser &gt; 0.
+     */
+<span class="fc" id="L45">    public CommonActions(AppiumDriver driver, int timeoutSeconds) {</span>
+<span class="fc bfc" id="L46" title="All 2 branches covered.">        if (driver == null) {</span>
+<span class="fc" id="L47">            logger.error(&quot;Driver não pode ser null ao inicializar CommonActions&quot;);</span>
+<span class="fc" id="L48">            throw new IllegalArgumentException(&quot;AppiumDriver não pode ser null&quot;);</span>
+        }
+<span class="fc bfc" id="L50" title="All 2 branches covered.">        if (timeoutSeconds &lt;= 0) {</span>
+<span class="fc" id="L51">            logger.error(&quot;Timeout deve ser maior que zero, recebido: {}&quot;, timeoutSeconds);</span>
+<span class="fc" id="L52">            throw new IllegalArgumentException(&quot;Timeout deve ser maior que zero&quot;);</span>
+        }
+<span class="fc" id="L54">        this.driver = driver;</span>
+<span class="fc" id="L55">        this.wait = new WebDriverWait(driver, Duration.ofSeconds(timeoutSeconds));</span>
+<span class="fc" id="L56">        logger.info(&quot;CommonActions inicializado com timeout customizado de {} segundos&quot;, timeoutSeconds);</span>
+<span class="fc" id="L57">    }</span>
+
+    /**
+     * Permite a Injeção de Dependência (DI) de um WebDriverWait mockado.
+     * @param driver O mock do AppiumDriver. Não pode ser null.
+     * @param wait O mock do WebDriverWait. Não pode ser null.
+     */
+<span class="fc" id="L64">    public CommonActions(AppiumDriver driver, WebDriverWait wait) {</span>
+<span class="pc bpc" id="L65" title="2 of 4 branches missed.">        if (driver == null || wait == null) {</span>
+<span class="nc" id="L66">            logger.error(&quot;Driver e Wait não podem ser null no construtor de DI&quot;);</span>
+<span class="nc" id="L67">            throw new IllegalArgumentException(&quot;Driver e Wait não podem ser null&quot;);</span>
+        }
+<span class="fc" id="L69">        this.driver = driver;</span>
+<span class="fc" id="L70">        this.wait = wait; // Recebe o mock injetado</span>
+<span class="fc" id="L71">        logger.info(&quot;CommonActions inicializado via DI para testes.&quot;);</span>
+<span class="fc" id="L72">    }</span>
+
+    /**
+     * Aguarda um elemento estar visível na tela.
+     * @param element O WebElement a ser aguardado. Não pode ser null.
+     * @return O WebElement visível.
+     */
+    public WebElement waitForElementVisible(WebElement element) {
+<span class="fc bfc" id="L80" title="All 2 branches covered.">        if (element == null) {</span>
+<span class="fc" id="L81">            logger.error(&quot;Elemento não pode ser null em waitForElementVisible&quot;);</span>
+<span class="fc" id="L82">            throw new IllegalArgumentException(&quot;WebElement não pode ser null&quot;);</span>
+        }
+        try {
+<span class="fc" id="L85">            logger.debug(&quot;Aguardando elemento ficar visível&quot;);</span>
+<span class="fc" id="L86">            WebElement visibleElement = getWait().until(ExpectedConditions.visibilityOf(element));</span>
+<span class="fc" id="L87">            logger.info(&quot;Elemento ficou visível com sucesso&quot;);</span>
+<span class="fc" id="L88">            return visibleElement;</span>
+<span class="fc" id="L89">        } catch (Exception e) {</span>
+<span class="fc" id="L90">            logger.error(&quot;Erro ao aguardar elemento ficar visível: {}&quot;, e.getMessage(), e);</span>
+<span class="fc" id="L91">            throw e;</span>
+        }
+    }
+
+    /**
+     * Clica em um elemento após aguardar que ele esteja visível e clicável.
+     * @param element O WebElement a ser clicado. Não pode ser null.
+     */
+    public void clickElement(WebElement element) {
+<span class="fc bfc" id="L100" title="All 2 branches covered.">        if (element == null) {</span>
+<span class="fc" id="L101">            logger.error(&quot;Elemento não pode ser null em clickElement&quot;);</span>
+<span class="fc" id="L102">            throw new IllegalArgumentException(&quot;WebElement não pode ser null&quot;);</span>
+        }
+        try {
+<span class="fc" id="L105">            logger.debug(&quot;Aguardando elemento ficar clicável&quot;);</span>
+<span class="fc" id="L106">            WebElement clickableElement = getWait().until(ExpectedConditions.elementToBeClickable(element));</span>
+<span class="fc" id="L107">            clickableElement.click();</span>
+<span class="fc" id="L108">            logger.info(&quot;Clique realizado com sucesso no elemento&quot;);</span>
+<span class="fc" id="L109">        } catch (Exception e) {</span>
+<span class="fc" id="L110">            logger.error(&quot;Erro ao clicar no elemento: {}&quot;, e.getMessage(), e);</span>
+<span class="fc" id="L111">            throw e;</span>
+<span class="fc" id="L112">        }</span>
+<span class="fc" id="L113">    }</span>
+
+    /**
+     * Insere texto num campo de input após aguardar visibilidade e limpá-lo.
+     * @param element O WebElement (campo de texto). Não pode ser null.
+     * @param text O texto a ser inserido. Não pode ser null nem vazio.
+     */
+    public void inputText(WebElement element, String text) {
+<span class="fc bfc" id="L121" title="All 2 branches covered.">        if (element == null) {</span>
+<span class="fc" id="L122">            logger.error(&quot;Elemento não pode ser null em inputText&quot;);</span>
+<span class="fc" id="L123">            throw new IllegalArgumentException(&quot;WebElement não pode ser null&quot;);</span>
+        }
+<span class="fc bfc" id="L125" title="All 4 branches covered.">        if (text == null || text.isEmpty()) {</span>
+<span class="fc" id="L126">            logger.error(&quot;Texto não pode ser null ou vazio em inputText&quot;);</span>
+<span class="fc" id="L127">            throw new IllegalArgumentException(&quot;Texto não pode ser null ou vazio&quot;);</span>
+        }
+        try {
+<span class="fc" id="L130">            logger.debug(&quot;Aguardando campo de texto ficar visível para input&quot;);</span>
+<span class="fc" id="L131">            WebElement visibleElement = getWait().until(ExpectedConditions.visibilityOf(element));</span>
+<span class="fc" id="L132">            visibleElement.clear();</span>
+<span class="fc" id="L133">            visibleElement.sendKeys(text);</span>
+<span class="fc" id="L134">            logger.info(&quot;Texto '{}' inserido com sucesso no elemento&quot;, text);</span>
+<span class="nc" id="L135">        } catch (Exception e) {</span>
+<span class="nc" id="L136">            logger.error(&quot;Erro ao inserir texto '{}' no elemento: {}&quot;, text, e.getMessage(), e);</span>
+<span class="nc" id="L137">            throw e;</span>
+<span class="fc" id="L138">        }</span>
+<span class="fc" id="L139">    }</span>
+
+    /**
+     * Obtém o texto visível de um elemento após aguardar a visibilidade.
+     * @param element O WebElement do qual obter o texto. Não pode ser null.
+     * @return O texto do elemento como String.
+     */
+    public String getTextFromElement(WebElement element) {
+<span class="fc bfc" id="L147" title="All 2 branches covered.">        if (element == null) {</span>
+<span class="fc" id="L148">            logger.error(&quot;Elemento não pode ser null em getTextFromElement&quot;);</span>
+<span class="fc" id="L149">            throw new IllegalArgumentException(&quot;WebElement não pode ser null&quot;);</span>
+        }
+        try {
+<span class="fc" id="L152">            logger.debug(&quot;Aguardando elemento ficar visível para extrair texto&quot;);</span>
+<span class="fc" id="L153">            WebElement visibleElement = getWait().until(ExpectedConditions.visibilityOf(element));</span>
+<span class="fc" id="L154">            String text = visibleElement.getText();</span>
+<span class="fc" id="L155">            logger.info(&quot;Texto extraído com sucesso do elemento: '{}'&quot;, text);</span>
+<span class="fc" id="L156">            return text;</span>
+<span class="fc" id="L157">        } catch (Exception e) {</span>
+<span class="fc" id="L158">            logger.error(&quot;Erro ao extrair texto do elemento: {}&quot;, e.getMessage(), e);</span>
+<span class="fc" id="L159">            throw e;</span>
+        }
+    }
+
+    /**
+     * Realiza um swipe vertical padrão (scroll down), de 80% a 20% da altura da tela.
+     */
+    public void swipe() {
+<span class="fc" id="L167">        Dimension size = driver.manage().window().getSize();</span>
+<span class="fc bfc" id="L168" title="All 2 branches covered.">        if (size == null) {</span>
+<span class="fc" id="L169">            logger.error(&quot;Não foi possível obter dimensões da tela&quot;);</span>
+<span class="fc" id="L170">            throw new IllegalStateException(&quot;Dimensões da tela não disponíveis&quot;);</span>
+        }
+<span class="fc" id="L172">        int startX = size.width / 2;</span>
+<span class="fc" id="L173">        int startY = (int) (size.height * 0.8);</span>
+<span class="fc" id="L174">        int endY = (int) (size.height * 0.2);</span>
+
+<span class="fc" id="L176">        logger.debug(&quot;Iniciando swipe de ({}, {}) até ({}, {})&quot;, startX, startY, startX, endY);</span>
+<span class="fc" id="L177">        swipe(startX, startY, startX, endY);</span>
+<span class="fc" id="L178">    }</span>
+
+    /**
+     * Realiza um swipe customizado usando a API W3C Actions.
+     * @param startX Coordenada X inicial. Deve ser &gt;= 0.
+     * @param startY Coordenada Y inicial. Deve ser &gt;= 0.
+     * @param endX Coordenada X final. Deve ser &gt;= 0.
+     * @param endY Coordenada Y final. Deve ser &gt;= 0.
+     */
+    public void swipe(int startX, int startY, int endX, int endY) {
+<span class="fc bfc" id="L188" title="All 8 branches covered.">        if (startX &lt; 0 || startY &lt; 0 || endX &lt; 0 || endY &lt; 0) {</span>
+<span class="fc" id="L189">            logger.error(&quot;Coordenadas não podem ser negativas: ({},{}) até ({},{})&quot;, startX, startY, endX, endY);</span>
+<span class="fc" id="L190">            throw new IllegalArgumentException(&quot;Coordenadas devem ser não-negativas&quot;);</span>
+        }
+        try {
+<span class="fc" id="L193">            logger.debug(&quot;Iniciando swipe W3C de ({}, {}) até ({}, {})&quot;, startX, startY, endX, endY);</span>
+
+<span class="fc" id="L195">            PointerInput finger = new PointerInput(PointerInput.Kind.TOUCH, &quot;finger&quot;);</span>
+<span class="fc" id="L196">            Sequence swipeSequence = new Sequence(finger, 1);</span>
+
+<span class="fc" id="L198">            swipeSequence.addAction(finger.createPointerMove(Duration.ZERO, PointerInput.Origin.viewport(), startX, startY));</span>
+<span class="fc" id="L199">            swipeSequence.addAction(finger.createPointerDown(PointerInput.MouseButton.LEFT.asArg()));</span>
+<span class="fc" id="L200">            swipeSequence.addAction(finger.createPointerMove(Duration.ofMillis(SWIPE_DURATION_MS), PointerInput.Origin.viewport(), endX, endY));</span>
+<span class="fc" id="L201">            swipeSequence.addAction(finger.createPointerUp(PointerInput.MouseButton.LEFT.asArg()));</span>
+
+<span class="fc" id="L203">            driver.perform(Collections.singletonList(swipeSequence));</span>
+
+<span class="fc" id="L205">            logger.info(&quot;Swipe W3C customizado realizado com sucesso&quot;);</span>
+<span class="nc" id="L206">        } catch (Exception e) {</span>
+<span class="nc" id="L207">            logger.error(&quot;Erro ao realizar swipe W3C customizado: {}&quot;, e.getMessage(), e);</span>
+<span class="nc" id="L208">            throw e;</span>
+<span class="fc" id="L209">        }</span>
+<span class="fc" id="L210">    }</span>
+
+    /**
+     * Retorna a instância do WebDriverWait configurada.
+     * @return A instância do WebDriverWait.
+     */
+    public WebDriverWait getWait() {
+<span class="fc" id="L217">        return wait;</span>
+    }
+
+    /**
+     * Retorna a instância do AppiumDriver atual.
+     * @return A instância do AppiumDriver.
+     */
+    public AppiumDriver getDriver() {
+<span class="fc" id="L225">        return driver;</span>
+    }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

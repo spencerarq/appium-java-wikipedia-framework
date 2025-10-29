@@ -19,26 +19,18 @@ import java.time.Duration;
  */
 public class DriverFactory {
 
-    // --- Refatoração Singleton ---
+
     private static final DriverFactory instance = new DriverFactory();
-
-    // Construtor privado para garantir o Singleton
     private DriverFactory() {}
-
-    /**
-     * Obtém a instância única da DriverFactory.
-     *
-     * @return A instância do Singleton.
-     */
     public static DriverFactory getInstance() {
         return instance;
     }
-    // --- Fim da Refatoração Singleton ---
+
 
     private final ThreadLocal<AppiumDriver> driverThreadLocal = new ThreadLocal<>();
 
     /**
-     * Inicializa e retorna um AppiumDriver (especificamente AndroidDriver)
+     * Inicializa e retorna um AppiumDriver
      * com base nas configurações do ConfigReader.
      * Se um driver já existir para a thread atual, ele é retornado.
      *
@@ -53,7 +45,10 @@ public class DriverFactory {
         }
 
         LoggerHelper.info("Iniciando AndroidDriver...");
+
+
         AppiumDriver driver;
+
         URL serverUrl;
 
         try {
@@ -64,24 +59,18 @@ public class DriverFactory {
         }
 
         try {
-            UiAutomator2Options options = new UiAutomator2Options()
-                    .setPlatformName(ConfigReader.getPlatformName())
-                    .setAutomationName(ConfigReader.getAutomationName())
-                    .setDeviceName(ConfigReader.getDeviceName())
-                    .setAppPackage(ConfigReader.getAppPackage())
-                    .setAppWaitActivity(ConfigReader.getAppWaitActivity())
-                    .setNewCommandTimeout(Duration.ofSeconds(3600));
+            // 1. LÓGICA EXTRAÍDA
+            UiAutomator2Options options = createAndroidOptions();
 
-            // 3. Inicializar o Driver (MÉTODO EXTRAÍDO)
-            // Este é o método que vamos "espionar" (Spy) no teste unitário
+            // 2. Inicializar o Driver
             driver = createDriver(serverUrl, options);
 
-            // 4. Configurar Implicit Wait
+            // 3. Configurar Implicit Wait
             int implicitWaitSeconds = ConfigReader.getImplicitWait();
             driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(implicitWaitSeconds));
             LoggerHelper.info("Implicit wait definido para {} segundos.", implicitWaitSeconds);
 
-            // 5. Armazenar o driver na ThreadLocal
+            // 4. Armazenar o driver na ThreadLocal
             driverThreadLocal.set(driver);
             LoggerHelper.info("AndroidDriver inicializado com sucesso. Session ID: {}", driver.getSessionId());
 
@@ -97,8 +86,26 @@ public class DriverFactory {
     }
 
     /**
-     * [PROTEGIDO PARA TESTES]
-     * Extrai a criação real do driver para permitir que seja mockado/espionado.
+     *
+     * Cria o objeto UiAutomator2Options com base no ConfigReader.
+     * Esta lógica foi extraída para permitir testes unitários isolados
+     * sem depender do ConfigReader real.
+     *
+     * @return UiAutomator2Options configuradas.
+     */
+    public UiAutomator2Options createAndroidOptions() {
+        return new UiAutomator2Options()
+                .setPlatformName(ConfigReader.getPlatformName())
+                .setAutomationName(ConfigReader.getAutomationName())
+                .setDeviceName(ConfigReader.getDeviceName())
+                .setAppPackage(ConfigReader.getAppPackage())
+                .setAppWaitActivity(ConfigReader.getAppWaitActivity())
+                .setNewCommandTimeout(Duration.ofSeconds(3600));
+    }
+
+    /**
+     *
+     * Extrai a criação real do driver para permitir que seja mockado
      *
      * @param serverUrl URL do Appium
      * @param options   Capabilities
@@ -115,6 +122,18 @@ public class DriverFactory {
      */
     public synchronized AppiumDriver getDriver() {
         return driverThreadLocal.get();
+    }
+
+    /**
+     *
+     * Permite a injeção de um mock driver diretamente na ThreadLocal.
+     * Essencial para testar unitariamente as classes (como CommonActions)
+     * que dependem de um getDriver() ativo.
+     *
+     * @param driver O mock de AppiumDriver a ser injetado.
+     */
+    public synchronized void setDriver(AppiumDriver driver) {
+        driverThreadLocal.set(driver);
     }
 
     /**

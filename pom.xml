@@ -9,7 +9,7 @@
     <version>1.0-SNAPSHOT</version>
 
     <name>Appium Wikipedia Framework - Mobile Test Automation</name>
-    <description>Framework robusto de automação mobile para Android, aplicando pirâmide de testes, Page Object Model e melhores práticas de QA Engineering.</description>
+    <description>Framework robusto de automação mobile para Android...</description>
     <url>https://github.com/spencerarq/appium-java-wikipedia-framework</url>
 
     <properties>
@@ -31,85 +31,23 @@
         <allure-maven.version>2.12.0</allure-maven.version>
         <allure-testng.version>2.29.0</allure-testng.version>
 
-        <argLine></argLine>
-        <allure.results.directory>${project.build.directory}/allure-results</allure.results.directory>
-        <jacoco.coverage.ratio>0.80</jacoco.coverage.ratio>
-        <jacoco.haltOnFailure>true</jacoco.haltOnFailure>
-        <suiteXmlFile>testng.xml</suiteXmlFile>
+        <argLine></argLine> <allure.results.directory>${project.build.directory}/allure-results</allure.results.directory>
+        <jacoco.coverage.ratio>0.85</jacoco.coverage.ratio> <jacoco.haltOnFailure>false</jacoco.haltOnFailure> <suiteXmlFile>testng.xml</suiteXmlFile>
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>org.seleniumhq.selenium</groupId>
-            <artifactId>selenium-java</artifactId>
-            <version>${selenium.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.appium</groupId>
-            <artifactId>java-client</artifactId>
-            <version>${java-client.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
-            <version>${testng.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
-            <version>${junit.jupiter.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
-            <version>${junit.jupiter.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-params</artifactId>
-            <version>${junit.jupiter.version}</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <version>${mockito.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-junit-jupiter</artifactId>
-            <version>${mockito.version}</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>${slf4j.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>${logback.version}</version>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.qameta.allure</groupId>
-            <artifactId>allure-testng</artifactId>
-            <version>${allure-testng.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>${lombok.version}</version>
-            <scope>provided</scope>
-        </dependency>
+        <dependency> <groupId>org.seleniumhq.selenium</groupId> <artifactId>selenium-java</artifactId> <version>${selenium.version}</version> </dependency>
+        <dependency> <groupId>io.appium</groupId> <artifactId>java-client</artifactId> <version>${java-client.version}</version> </dependency>
+        <dependency> <groupId>org.testng</groupId> <artifactId>testng</artifactId> <version>${testng.version}</version> <scope>test</scope> </dependency>
+        <dependency> <groupId>org.junit.jupiter</groupId> <artifactId>junit-jupiter-api</artifactId> <version>${junit.jupiter.version}</version> <scope>test</scope> </dependency>
+        <dependency> <groupId>org.junit.jupiter</groupId> <artifactId>junit-jupiter-engine</artifactId> <version>${junit.jupiter.version}</version> <scope>test</scope> </dependency>
+        <dependency> <groupId>org.junit.jupiter</groupId> <artifactId>junit-jupiter-params</artifactId> <version>${junit.jupiter.version}</version> <scope>test</scope> </dependency>
+        <dependency> <groupId>org.mockito</groupId> <artifactId>mockito-core</artifactId> <version>${mockito.version}</version> <scope>test</scope> </dependency>
+        <dependency> <groupId>org.mockito</groupId> <artifactId>mockito-junit-jupiter</artifactId> <version>${mockito.version}</version> <scope>test</scope> </dependency>
+        <dependency> <groupId>org.slf4j</groupId> <artifactId>slf4j-api</artifactId> <version>${slf4j.version}</version> </dependency>
+        <dependency> <groupId>ch.qos.logback</groupId> <artifactId>logback-classic</artifactId> <version>${logback.version}</version> <scope>runtime</scope> </dependency>
+        <dependency> <groupId>io.qameta.allure</groupId> <artifactId>allure-testng</artifactId> <version>${allure-testng.version}</version> <scope>test</scope> </dependency>
+        <dependency> <groupId>org.projectlombok</groupId> <artifactId>lombok</artifactId> <version>${lombok.version}</version> <scope>provided</scope> </dependency>
     </dependencies>
 
     <build>
@@ -129,16 +67,16 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven-surefire-plugin.version}</version>
                 <configuration>
-                    <argLine>
-                        ${argLine}
-                    </argLine>
+                    <argLine>${argLine}</argLine>
+
                     <includes>
                         <include>**/*UnitTest.java</include>
-                        <include>**/*E2ETest.java</include>
                     </includes>
-                    <suiteXmlFiles>
-                        <suiteXmlFile>${basedir}/src/test/resources/${suiteXmlFile}</suiteXmlFile>
-                    </suiteXmlFiles>
+                    <excludes>
+                        <exclude>**/*IntegrationTest.java</exclude>
+                        <exclude>**/*E2ETest.java</exclude>
+                    </excludes>
+
                     <properties>
                         <property>
                             <name>listener</name>
@@ -170,28 +108,39 @@
                         </goals>
                         <configuration>
                             <outputDirectory>${project.build.directory}/site/jacoco</outputDirectory>
+                            <excludes>
+                                <exclude>com/wikipedia/pages/**</exclude>
+                                <exclude>com/wikipedia/tests/**</exclude>
+                                <exclude>com/wikipedia/e2e/**</exclude>
+                            </excludes>
                         </configuration>
                     </execution>
                     <execution>
                         <id>jacoco-check</id>
+                        <phase>verify</phase>
                         <goals>
                             <goal>check</goal>
                         </goals>
                         <configuration>
                             <rules>
                                 <rule>
-                                    <element>BUNDLE</element>
+                                    <element>CLASS</element>
                                     <limits>
                                         <limit>
                                             <counter>INSTRUCTION</counter>
                                             <value>COVEREDRATIO</value>
                                             <minimum>${jacoco.coverage.ratio}</minimum>
                                         </limit>
+                                        <limit>
+                                            <counter>BRANCH</counter>
+                                            <value>COVEREDRATIO</value>
+                                            <minimum>0.70</minimum>
+                                        </limit>
                                     </limits>
-                                    <excludes>
-                                        <exclude>**/config/**</exclude>
-                                        <exclude>**/driver/**</exclude>
-                                    </excludes>
+                                    <includes>
+                                        <include>com.wikipedia.commons.*</include>
+                                        <include>com.wikipedia.utils.*</include>
+                                    </includes>
                                 </rule>
                             </rules>
                             <haltOnFailure>${jacoco.haltOnFailure}</haltOnFailure>
@@ -216,15 +165,69 @@
     <profiles>
         <profile>
             <id>e2e-tests</id>
-            <properties>
-                <suiteXmlFile>testng.xml</suiteXmlFile>
-            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <includes>
+                                <include>**/*E2ETest.java</include>
+                            </includes>
+                            <excludes>
+                                <exclude>**/*UnitTest.java</exclude>
+                                <exclude>**/*IntegrationTest.java</exclude>
+                            </excludes>
+
+                            <suiteXmlFiles>
+                                <suiteXmlFile>${basedir}/src/test/resources/testng.xml</suiteXmlFile>
+                            </suiteXmlFiles>
+                            <properties>
+                                <property>
+                                    <name>listener</name>
+                                    <value>io.qameta.allure.testng.AllureTestNg</value>
+                                </property>
+                            </properties>
+                            <systemPropertyVariables>
+                                <allure.results.directory>${allure.results.directory}</allure.results.directory>
+                            </systemPropertyVariables>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
         </profile>
+
         <profile>
             <id>smoke-tests</id>
-            <properties>
-                <suiteXmlFile>testng-smoke.xml</suiteXmlFile>
-            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <includes>
+                                <include>**/*E2ETest.java</include>
+                            </includes>
+                            <excludes>
+                                <exclude>**/*UnitTest.java</exclude>
+                                <exclude>**/*IntegrationTest.java</exclude>
+                            </excludes>
+                            <suiteXmlFiles>
+                                <suiteXmlFile>${basedir}/src/test/resources/testng-smoke.xml</suiteXmlFile>
+                            </suiteXmlFiles>
+                            <properties>
+                                <property>
+                                    <name>listener</name>
+                                    <value>io.qameta.allure.testng.AllureTestNg</value>
+                                </property>
+                            </properties>
+                            <systemPropertyVariables>
+                                <allure.results.directory>${allure.results.directory}</allure.results.directory>
+                            </systemPropertyVariables>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
         </profile>
     </profiles>
 

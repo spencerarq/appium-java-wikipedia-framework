@@ -12,7 +12,7 @@ import java.util.Properties;
 
 /**
  * Classe utilitária para ler as configurações do arquivo config.properties.
- * Utiliza o padrão Singleton (via inicialização estática) para garantir que as propriedades sejam carregadas apenas uma vez por arquivo.
+ * Utiliza o padrão Singleton para garantir que as propriedades sejam carregadas apenas uma vez por arquivo.
  * Inclui métodos para carregar arquivos de teste e restaurar o padrão.
  */
 public class ConfigReader {
@@ -43,10 +43,10 @@ public class ConfigReader {
 <span class="fc" id="L43">        logger.info(&quot;Carregando propriedades do arquivo: {}&quot;, filePath);</span>
 
         // Verifica se o arquivo existe antes de tentar carregar
-<span class="fc bfc" id="L46" title="All 2 branches covered.">        if (!Files.exists(Paths.get(filePath))) {</span>
-<span class="fc" id="L47">            logger.error(&quot;Arquivo de configuração não encontrado em: {}&quot;, filePath);</span>
+<span class="pc bpc" id="L46" title="1 of 2 branches missed.">        if (!Files.exists(Paths.get(filePath))) {</span>
+<span class="nc" id="L47">            logger.error(&quot;Arquivo de configuração não encontrado em: {}&quot;, filePath);</span>
             // Lança uma exceção pois a configuração é essencial
-<span class="fc" id="L49">            throw new RuntimeException(&quot;Arquivo de configuração não encontrado: &quot; + filePath);</span>
+<span class="nc" id="L49">            throw new RuntimeException(&quot;Arquivo de configuração não encontrado: &quot; + filePath);</span>
         }
 
         // Usa try-with-resources para garantir o fechamento do InputStream
@@ -64,30 +64,28 @@ public class ConfigReader {
 <span class="fc" id="L64">    }</span>
 
     /**
-     * [MÉTODO PARA TESTES UNITÁRIOS]
      * Força o carregamento de propriedades de um arquivo específico, substituindo as atuais.
      * Use com cuidado e sempre restaure com resetToDefaultProperties() após o teste.
      * @param testFilePath Caminho para o arquivo de propriedades de teste.
      */
     public static synchronized void loadTestProperties(String testFilePath) {
-<span class="fc" id="L73">        logger.warn(&quot;--- CARREGANDO PROPRIEDADES DE TESTE DE: {} ---&quot;, testFilePath);</span>
-<span class="fc" id="L74">        loadProperties(testFilePath);</span>
-<span class="fc" id="L75">    }</span>
+<span class="fc" id="L72">        logger.warn(&quot;--- CARREGANDO PROPRIEDADES DE TESTE DE: {} ---&quot;, testFilePath);</span>
+<span class="fc" id="L73">        loadProperties(testFilePath);</span>
+<span class="fc" id="L74">    }</span>
 
     /**
-     * [MÉTODO PARA TESTES UNITÁRIOS]
      * Restaura o carregamento para o arquivo de propriedades padrão (definido em DEFAULT_CONFIG_FILE_PATH).
      * Deve ser chamado em um método @AfterAll ou @AfterEach nos testes unitários.
      */
     public static synchronized void resetToDefaultProperties() {
         // Só recarrega se o arquivo atual NÃO for o padrão
-<span class="pc bpc" id="L84" title="1 of 2 branches missed.">        if (!currentConfigPath.equals(DEFAULT_CONFIG_FILE_PATH)) {</span>
-<span class="fc" id="L85">            logger.warn(&quot;--- RESTAURANDO PROPRIEDADES PADRÃO DE: {} ---&quot;, DEFAULT_CONFIG_FILE_PATH);</span>
-<span class="fc" id="L86">            loadProperties(DEFAULT_CONFIG_FILE_PATH);</span>
+<span class="fc bfc" id="L82" title="All 2 branches covered.">        if (!currentConfigPath.equals(DEFAULT_CONFIG_FILE_PATH)) {</span>
+<span class="fc" id="L83">            logger.warn(&quot;--- RESTAURANDO PROPRIEDADES PADRÃO DE: {} ---&quot;, DEFAULT_CONFIG_FILE_PATH);</span>
+<span class="fc" id="L84">            loadProperties(DEFAULT_CONFIG_FILE_PATH);</span>
         } else {
-<span class="nc" id="L88">            logger.debug(&quot;Propriedades padrão já estavam carregadas. Nenhuma ação necessária.&quot;);</span>
+<span class="fc" id="L86">            logger.debug(&quot;Propriedades padrão já estavam carregadas. Nenhuma ação necessária.&quot;);</span>
         }
-<span class="fc" id="L90">    }</span>
+<span class="fc" id="L88">    }</span>
 
     /**
      * Obtém o valor de uma propriedade de configuração atualmente carregada.
@@ -97,23 +95,23 @@ public class ConfigReader {
      */
     public static String getProperty(String propertyName) {
         // Verifica se 'properties' foi inicializado (embora o bloco estático deva garantir isso)
-<span class="pc bpc" id="L100" title="1 of 2 branches missed.">        if (properties == null) {</span>
-<span class="nc" id="L101">            logger.error(&quot;Objeto Properties não inicializado ao buscar '{}'. Verifique o fluxo de inicialização.&quot;, propertyName);</span>
+<span class="pc bpc" id="L98" title="1 of 2 branches missed.">        if (properties == null) {</span>
+<span class="nc" id="L99">            logger.error(&quot;Objeto Properties não inicializado ao buscar '{}'. Verifique o fluxo de inicialização.&quot;, propertyName);</span>
             // Tentar recarregar pode mascarar o problema original, melhor falhar ou retornar null.
-<span class="nc" id="L103">            return null;</span>
+<span class="nc" id="L101">            return null;</span>
             // Se optar por tentar recarregar:
             // logger.warn(&quot;Tentando recarregar propriedades de {}.&quot;, currentConfigPath);
             // loadProperties(currentConfigPath);
             // if (properties == null) return null; // Se ainda falhar
         }
-<span class="fc" id="L109">        String value = properties.getProperty(propertyName);</span>
-<span class="fc bfc" id="L110" title="All 2 branches covered.">        if (value == null) {</span>
+<span class="fc" id="L107">        String value = properties.getProperty(propertyName);</span>
+<span class="fc bfc" id="L108" title="All 2 branches covered.">        if (value == null) {</span>
             // Usar WARN para propriedades não encontradas é útil para debug
-<span class="fc" id="L112">            logger.warn(&quot;Propriedade '{}' não encontrada no arquivo {}&quot;, propertyName, currentConfigPath);</span>
+<span class="fc" id="L110">            logger.warn(&quot;Propriedade '{}' não encontrada no arquivo {}&quot;, propertyName, currentConfigPath);</span>
         }
         // Log TRACE pode ser útil para depuração detalhada
         // logger.trace(&quot;Obtendo propriedade: {} = {}&quot;, propertyName, value);
-<span class="fc" id="L116">        return value;</span>
+<span class="fc" id="L114">        return value;</span>
     }
 
     /**
@@ -124,9 +122,9 @@ public class ConfigReader {
      * @return O valor da propriedade como String, ou o valor padrão.
      */
     public static String getProperty(String propertyName, String defaultValue) {
-<span class="fc" id="L127">        String value = getProperty(propertyName);</span>
+<span class="fc" id="L125">        String value = getProperty(propertyName);</span>
         // Retorna o valor lido se não for nulo, caso contrário retorna o padrão
-<span class="fc bfc" id="L129" title="All 2 branches covered.">        return (value != null) ? value : defaultValue;</span>
+<span class="fc bfc" id="L127" title="All 2 branches covered.">        return (value != null) ? value : defaultValue;</span>
     }
 
     /**
@@ -137,24 +135,24 @@ public class ConfigReader {
      * @return O valor da propriedade como int, ou o valor padrão.
      */
     public static int getIntProperty(String propertyName, int defaultValue) {
-<span class="fc" id="L140">        String value = getProperty(propertyName);</span>
-<span class="pc bpc" id="L141" title="1 of 4 branches missed.">        if (value != null &amp;&amp; !value.trim().isEmpty()) { // Verifica também se não está vazio após trim</span>
+<span class="fc" id="L138">        String value = getProperty(propertyName);</span>
+<span class="fc bfc" id="L139" title="All 4 branches covered.">        if (value != null &amp;&amp; !value.trim().isEmpty()) { // Verifica também se não está vazio após trim</span>
             try {
                 // trim() remove espaços extras antes de tentar converter
-<span class="fc" id="L144">                return Integer.parseInt(value.trim());</span>
-<span class="fc" id="L145">            } catch (NumberFormatException e) {</span>
+<span class="fc" id="L142">                return Integer.parseInt(value.trim());</span>
+<span class="fc" id="L143">            } catch (NumberFormatException e) {</span>
                 // Log mais detalhado sobre a falha de conversão
-<span class="fc" id="L147">                logger.warn(&quot;Falha ao converter a propriedade '{}' ('{}') do arquivo {} para inteiro. Usando valor padrão: {}. Erro: {}&quot;,</span>
-<span class="fc" id="L148">                        propertyName, value, currentConfigPath, defaultValue, e.getMessage());</span>
-<span class="fc" id="L149">            }</span>
-<span class="pc bpc" id="L150" title="3 of 4 branches missed.">        } else if (value != null &amp;&amp; value.trim().isEmpty()){</span>
-<span class="nc" id="L151">            logger.warn(&quot;Propriedade '{}' está presente mas vazia no arquivo {}. Usando valor padrão: {}&quot;, propertyName, currentConfigPath, defaultValue);</span>
+<span class="fc" id="L145">                logger.warn(&quot;Falha ao converter a propriedade '{}' ('{}') do arquivo {} para inteiro. Usando valor padrão: {}. Erro: {}&quot;,</span>
+<span class="fc" id="L146">                        propertyName, value, currentConfigPath, defaultValue, e.getMessage());</span>
+<span class="fc" id="L147">            }</span>
+<span class="pc bpc" id="L148" title="1 of 4 branches missed.">        } else if (value != null &amp;&amp; value.trim().isEmpty()){</span>
+<span class="fc" id="L149">            logger.warn(&quot;Propriedade '{}' está presente mas vazia no arquivo {}. Usando valor padrão: {}&quot;, propertyName, currentConfigPath, defaultValue);</span>
         }
         // Retorna o padrão se a propriedade não existe, está vazia ou falhou na conversão
-<span class="fc" id="L154">        return defaultValue;</span>
+<span class="fc" id="L152">        return defaultValue;</span>
     }
 
-    // --- Constantes para as chaves das propriedades essenciais (Boa prática) ---
+
     public static final String PLATFORM_NAME = &quot;platformName&quot;;
     public static final String AUTOMATION_NAME = &quot;automationName&quot;;
     public static final String DEVICE_NAME = &quot;deviceName&quot;;
@@ -162,38 +160,36 @@ public class ConfigReader {
     public static final String APP_WAIT_ACTIVITY = &quot;appWaitActivity&quot;;
     public static final String IMPLICIT_WAIT = &quot;implicitWaitTimeout&quot;; // Em segundos
     public static final String APPIUM_SERVER_URL = &quot;appiumServerUrl&quot;;
-    // Adicione outras constantes conforme necessário
 
-    // --- Métodos de acesso convenientes para propriedades comuns (Opcional, mas recomendado) ---
 
     public static String getPlatformName() {
-<span class="fc" id="L170">        return getProperty(PLATFORM_NAME);</span>
+<span class="nc" id="L166">        return getProperty(PLATFORM_NAME);</span>
     }
 
     public static String getAutomationName() {
-<span class="nc" id="L174">        return getProperty(AUTOMATION_NAME);</span>
+<span class="nc" id="L170">        return getProperty(AUTOMATION_NAME);</span>
     }
 
     public static String getDeviceName() {
-<span class="fc" id="L178">        return getProperty(DEVICE_NAME);</span>
+<span class="nc" id="L174">        return getProperty(DEVICE_NAME);</span>
     }
 
     public static String getAppPackage() {
-<span class="nc" id="L182">        return getProperty(APP_PACKAGE);</span>
+<span class="nc" id="L178">        return getProperty(APP_PACKAGE);</span>
     }
 
     public static String getAppWaitActivity() {
-<span class="nc" id="L186">        return getProperty(APP_WAIT_ACTIVITY);</span>
+<span class="nc" id="L182">        return getProperty(APP_WAIT_ACTIVITY);</span>
     }
 
     public static int getImplicitWait() {
         // Padrão de 10 segundos se não definido no arquivo ou inválido
-<span class="fc" id="L191">        return getIntProperty(IMPLICIT_WAIT, 10);</span>
+<span class="nc" id="L187">        return getIntProperty(IMPLICIT_WAIT, 10);</span>
     }
 
     public static String getAppiumServerUrl() {
         // Padrão local se não definido no arquivo
-<span class="fc" id="L196">        return getProperty(APPIUM_SERVER_URL, &quot;http://127.0.0.1:4723&quot;);</span>
+<span class="nc" id="L192">        return getProperty(APPIUM_SERVER_URL, &quot;http://127.0.0.1:4723&quot;);</span>
     }
 
 }

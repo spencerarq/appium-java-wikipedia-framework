@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.wikipedia.unit.ConfigReaderUnitTest
 -------------------------------------------------------------------------------
-Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.535 s -- in com.wikipedia.unit.ConfigReaderUnitTest
+Tests run: 13, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.181 s -- in com.wikipedia.unit.ConfigReaderUnitTest

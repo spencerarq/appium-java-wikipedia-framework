@@ -22,7 +22,13 @@
 - [Cobertura de Código](#cobertura-de-código)
 - [CI/CD](#cicd)
 - [Roadmap](#roadmap)
+- [Casos de Teste](#casos-de-teste)
 - [Autor](#autor)
+- [Contribuindo](#contribuindo)
+- [Licença](#licença)
+- [Agradecimentos](#agradecimentos)
+- [Status do Projeto](#status-do-projeto)
+
 
 ---
 
@@ -73,7 +79,7 @@ Desenvolvimento de competências técnicas em **QA Engineering** e **Test Automa
 - **Java 17+** - Linguagem base
 - **Maven 3.9+** - Gerenciamento de dependências
 - **Appium 2.x** - Automação mobile
-- **Appium Java Client 9.x** - Bindings Java
+- **Appium Java Client 10.x** - Bindings Java
 
 ### Test Frameworks
 - **TestNG** - Runner para testes E2E
@@ -296,20 +302,23 @@ appium-java-wikipedia-framework/
 │   │       └── LoggerHelper.java
 │   │
 │   └── test/java/com/wikipedia/
-│       ├── unit/               # Testes Unitários (JUnit 5)
-│       │   ├── CommonActionsUnitTest.java
-│       │   ├── DriverFactoryUnitTest.java
-│       │   └── TestHelperUnitTest.java
-│       │
-│       └── e2e/                # Testes E2E (TestNG)
-│           ├── TC01_SearchArticleE2ETest.java
-│           ├── TC02_NoResultsE2ETest.java
-│           ├── TC03a_SaveArticleE2ETest.java
-│           ├── TC03b_RemoveArticleE2ETest.java
-│           ├── TC04_ChangeLanguageE2ETest.java
-│           ├── TC05_BackgroundE2ETest.java
-│           ├── TC06_RotationE2ETest.java
-│           └── TC07_ScrollE2ETest.java
+│     │  ├── unit/               # Testes Unitários (JUnit 5)
+│     │  │   ├── CommonActionsUnitTest.java
+│     │  │   ├── DriverFactoryUnitTest.java
+│     │  │   └── TestHelperUnitTest.java
+│     │  │
+│     │  └── e2e/                # Testes E2E (TestNG)
+│     │      ├── TC01_SearchArticleE2ETest.java
+│     │      ├── TC02_NoResultsE2ETest.java
+│     │      ├── TC03a_SaveArticleE2ETest.java
+│     │      ├── TC03b_RemoveArticleE2ETest.java
+│     │      ├── TC04_ChangeLanguageE2ETest.java
+│     │      ├── TC05_BackgroundE2ETest.java
+│     │      ├── TC06_RotationE2ETest.java
+│     │      └── TC07_ScrollE2ETest.java
+│     │
+│     └── integration.driver/      # Testes Integração
+│            └── DriverFactoryIntegrationTest.java
 │
 ├── src/test/resources/
 │   ├── config.properties       # Configurações do projeto
@@ -416,7 +425,7 @@ mvn jacoco:check
 - [x] Testes unitários (10-15)
 - [x] Testes E2E críticos (7)
 - [x] JaCoCo + Allure
-- [x] GitHub Actions
+- [ ] GitHub Actions
 
 ### Fase 2 - Expansão (Planejado)
 - [ ] Testes de integração (API Wikipedia)

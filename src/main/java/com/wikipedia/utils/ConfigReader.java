@@ -12,7 +12,7 @@ import java.util.Properties;
 
 /**
  * Classe utilitária para ler as configurações do arquivo config.properties.
- * Utiliza o padrão Singleton (via inicialização estática) para garantir que as propriedades sejam carregadas apenas uma vez por arquivo.
+ * Utiliza o padrão Singleton para garantir que as propriedades sejam carregadas apenas uma vez por arquivo.
  * Inclui métodos para carregar arquivos de teste e restaurar o padrão.
  */
 public class ConfigReader {
@@ -64,7 +64,6 @@ public class ConfigReader {
     }
 
     /**
-     * [MÉTODO PARA TESTES UNITÁRIOS]
      * Força o carregamento de propriedades de um arquivo específico, substituindo as atuais.
      * Use com cuidado e sempre restaure com resetToDefaultProperties() após o teste.
      * @param testFilePath Caminho para o arquivo de propriedades de teste.
@@ -75,7 +74,6 @@ public class ConfigReader {
     }
 
     /**
-     * [MÉTODO PARA TESTES UNITÁRIOS]
      * Restaura o carregamento para o arquivo de propriedades padrão (definido em DEFAULT_CONFIG_FILE_PATH).
      * Deve ser chamado em um método @AfterAll ou @AfterEach nos testes unitários.
      */
@@ -154,7 +152,7 @@ public class ConfigReader {
         return defaultValue;
     }
 
-    // --- Constantes para as chaves das propriedades essenciais (Boa prática) ---
+
     public static final String PLATFORM_NAME = "platformName";
     public static final String AUTOMATION_NAME = "automationName";
     public static final String DEVICE_NAME = "deviceName";
@@ -162,9 +160,7 @@ public class ConfigReader {
     public static final String APP_WAIT_ACTIVITY = "appWaitActivity";
     public static final String IMPLICIT_WAIT = "implicitWaitTimeout"; // Em segundos
     public static final String APPIUM_SERVER_URL = "appiumServerUrl";
-    // Adicione outras constantes conforme necessário
 
-    // --- Métodos de acesso convenientes para propriedades comuns (Opcional, mas recomendado) ---
 
     public static String getPlatformName() {
         return getProperty(PLATFORM_NAME);

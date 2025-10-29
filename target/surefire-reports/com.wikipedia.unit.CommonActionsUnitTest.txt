@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.wikipedia.unit.CommonActionsUnitTest
+-------------------------------------------------------------------------------
+Tests run: 22, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.086 s -- in com.wikipedia.unit.CommonActionsUnitTest

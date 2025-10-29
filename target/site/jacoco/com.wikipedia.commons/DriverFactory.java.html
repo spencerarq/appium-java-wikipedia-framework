@@ -19,26 +19,18 @@ import java.time.Duration;
  */
 public class DriverFactory {
 
-    // --- Refatoração Singleton ---
+
 <span class="fc" id="L23">    private static final DriverFactory instance = new DriverFactory();</span>
-
-    // Construtor privado para garantir o Singleton
-<span class="fc" id="L26">    private DriverFactory() {}</span>
-
-    /**
-     * Obtém a instância única da DriverFactory.
-     *
-     * @return A instância do Singleton.
-     */
+<span class="fc" id="L24">    private DriverFactory() {}</span>
     public static DriverFactory getInstance() {
-<span class="fc" id="L34">        return instance;</span>
+<span class="fc" id="L26">        return instance;</span>
     }
-    // --- Fim da Refatoração Singleton ---
 
-<span class="fc" id="L38">    private final ThreadLocal&lt;AppiumDriver&gt; driverThreadLocal = new ThreadLocal&lt;&gt;();</span>
+
+<span class="fc" id="L30">    private final ThreadLocal&lt;AppiumDriver&gt; driverThreadLocal = new ThreadLocal&lt;&gt;();</span>
 
     /**
-     * Inicializa e retorna um AppiumDriver (especificamente AndroidDriver)
+     * Inicializa e retorna um AppiumDriver
      * com base nas configurações do ConfigReader.
      * Se um driver já existir para a thread atual, ele é retornado.
      *
@@ -47,65 +39,80 @@ public class DriverFactory {
      * não puder ser criada (ex: servidor offline).
      */
     public synchronized AppiumDriver initializeAndroidDriver() {
-<span class="fc bfc" id="L50" title="All 2 branches covered.">        if (driverThreadLocal.get() != null) {</span>
-<span class="fc" id="L51">            LoggerHelper.debug(&quot;Driver já inicializado para esta thread. Retornando instância existente.&quot;);</span>
-<span class="fc" id="L52">            return driverThreadLocal.get();</span>
+<span class="nc bnc" id="L42" title="All 2 branches missed.">        if (driverThreadLocal.get() != null) {</span>
+<span class="nc" id="L43">            LoggerHelper.debug(&quot;Driver já inicializado para esta thread. Retornando instância existente.&quot;);</span>
+<span class="nc" id="L44">            return driverThreadLocal.get();</span>
         }
 
-<span class="fc" id="L55">        LoggerHelper.info(&quot;Iniciando AndroidDriver...&quot;);</span>
+<span class="nc" id="L47">        LoggerHelper.info(&quot;Iniciando AndroidDriver...&quot;);</span>
+
+
         AppiumDriver driver;
+
         URL serverUrl;
 
         try {
-<span class="fc" id="L60">            serverUrl = new URL(ConfigReader.getAppiumServerUrl());</span>
-<span class="fc" id="L61">        } catch (MalformedURLException e) {</span>
-<span class="fc" id="L62">            LoggerHelper.error(&quot;URL do Appium Server é inválida: &quot; + ConfigReader.getAppiumServerUrl(), e);</span>
-<span class="fc" id="L63">            throw new RuntimeException(&quot;URL do Appium Server é inválida: &quot; + ConfigReader.getAppiumServerUrl(), e);</span>
-<span class="fc" id="L64">        }</span>
+<span class="nc" id="L55">            serverUrl = new URL(ConfigReader.getAppiumServerUrl());</span>
+<span class="nc" id="L56">        } catch (MalformedURLException e) {</span>
+<span class="nc" id="L57">            LoggerHelper.error(&quot;URL do Appium Server é inválida: &quot; + ConfigReader.getAppiumServerUrl(), e);</span>
+<span class="nc" id="L58">            throw new RuntimeException(&quot;URL do Appium Server é inválida: &quot; + ConfigReader.getAppiumServerUrl(), e);</span>
+<span class="nc" id="L59">        }</span>
 
         try {
-<span class="fc" id="L67">            UiAutomator2Options options = new UiAutomator2Options()</span>
-<span class="fc" id="L68">                    .setPlatformName(ConfigReader.getPlatformName())</span>
-<span class="fc" id="L69">                    .setAutomationName(ConfigReader.getAutomationName())</span>
-<span class="fc" id="L70">                    .setDeviceName(ConfigReader.getDeviceName())</span>
-<span class="fc" id="L71">                    .setAppPackage(ConfigReader.getAppPackage())</span>
-<span class="fc" id="L72">                    .setAppWaitActivity(ConfigReader.getAppWaitActivity())</span>
-<span class="fc" id="L73">                    .setNewCommandTimeout(Duration.ofSeconds(3600));</span>
+            // 1. LÓGICA EXTRAÍDA
+<span class="nc" id="L63">            UiAutomator2Options options = createAndroidOptions();</span>
 
-            // 3. Inicializar o Driver (MÉTODO EXTRAÍDO)
-            // Este é o método que vamos &quot;espionar&quot; (Spy) no teste unitário
-<span class="fc" id="L77">            driver = createDriver(serverUrl, options);</span>
+            // 2. Inicializar o Driver
+<span class="nc" id="L66">            driver = createDriver(serverUrl, options);</span>
 
-            // 4. Configurar Implicit Wait
-<span class="fc" id="L80">            int implicitWaitSeconds = ConfigReader.getImplicitWait();</span>
-<span class="fc" id="L81">            driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(implicitWaitSeconds));</span>
-<span class="fc" id="L82">            LoggerHelper.info(&quot;Implicit wait definido para {} segundos.&quot;, implicitWaitSeconds);</span>
+            // 3. Configurar Implicit Wait
+<span class="nc" id="L69">            int implicitWaitSeconds = ConfigReader.getImplicitWait();</span>
+<span class="nc" id="L70">            driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(implicitWaitSeconds));</span>
+<span class="nc" id="L71">            LoggerHelper.info(&quot;Implicit wait definido para {} segundos.&quot;, implicitWaitSeconds);</span>
 
-            // 5. Armazenar o driver na ThreadLocal
-<span class="fc" id="L85">            driverThreadLocal.set(driver);</span>
-<span class="fc" id="L86">            LoggerHelper.info(&quot;AndroidDriver inicializado com sucesso. Session ID: {}&quot;, driver.getSessionId());</span>
+            // 4. Armazenar o driver na ThreadLocal
+<span class="nc" id="L74">            driverThreadLocal.set(driver);</span>
+<span class="nc" id="L75">            LoggerHelper.info(&quot;AndroidDriver inicializado com sucesso. Session ID: {}&quot;, driver.getSessionId());</span>
 
-<span class="fc" id="L88">        } catch (SessionNotCreatedException e) {</span>
-<span class="fc" id="L89">            LoggerHelper.error(&quot;Falha ao criar sessão do Appium. Verifique se o servidor está online e as capabilities estão corretas.&quot;, e);</span>
-<span class="fc" id="L90">            throw new RuntimeException(&quot;Não foi possível iniciar uma nova sessão com o Appium Server. Causa: &quot; + e.getMessage(), e);</span>
-<span class="nc" id="L91">        } catch (Exception e) {</span>
-<span class="nc" id="L92">            LoggerHelper.error(&quot;Erro inesperado ao inicializar o driver.&quot;, e);</span>
-<span class="nc" id="L93">            throw new RuntimeException(&quot;Erro inesperado ao inicializar o driver.&quot;, e);</span>
-<span class="fc" id="L94">        }</span>
+<span class="nc" id="L77">        } catch (SessionNotCreatedException e) {</span>
+<span class="nc" id="L78">            LoggerHelper.error(&quot;Falha ao criar sessão do Appium. Verifique se o servidor está online e as capabilities estão corretas.&quot;, e);</span>
+<span class="nc" id="L79">            throw new RuntimeException(&quot;Não foi possível iniciar uma nova sessão com o Appium Server. Causa: &quot; + e.getMessage(), e);</span>
+<span class="nc" id="L80">        } catch (Exception e) {</span>
+<span class="nc" id="L81">            LoggerHelper.error(&quot;Erro inesperado ao inicializar o driver.&quot;, e);</span>
+<span class="nc" id="L82">            throw new RuntimeException(&quot;Erro inesperado ao inicializar o driver.&quot;, e);</span>
+<span class="nc" id="L83">        }</span>
 
-<span class="fc" id="L96">        return driver;</span>
+<span class="nc" id="L85">        return driver;</span>
     }
 
     /**
-     * [PROTEGIDO PARA TESTES]
-     * Extrai a criação real do driver para permitir que seja mockado/espionado.
+     *
+     * Cria o objeto UiAutomator2Options com base no ConfigReader.
+     * Esta lógica foi extraída para permitir testes unitários isolados
+     * sem depender do ConfigReader real.
+     *
+     * @return UiAutomator2Options configuradas.
+     */
+    public UiAutomator2Options createAndroidOptions() {
+<span class="fc" id="L97">        return new UiAutomator2Options()</span>
+<span class="fc" id="L98">                .setPlatformName(ConfigReader.getPlatformName())</span>
+<span class="fc" id="L99">                .setAutomationName(ConfigReader.getAutomationName())</span>
+<span class="fc" id="L100">                .setDeviceName(ConfigReader.getDeviceName())</span>
+<span class="fc" id="L101">                .setAppPackage(ConfigReader.getAppPackage())</span>
+<span class="fc" id="L102">                .setAppWaitActivity(ConfigReader.getAppWaitActivity())</span>
+<span class="fc" id="L103">                .setNewCommandTimeout(Duration.ofSeconds(3600));</span>
+    }
+
+    /**
+     *
+     * Extrai a criação real do driver para permitir que seja mockado
      *
      * @param serverUrl URL do Appium
      * @param options   Capabilities
      * @return Um novo AppiumDriver
      */
     public AppiumDriver createDriver(URL serverUrl, UiAutomator2Options options) {
-<span class="nc" id="L108">        return new AndroidDriver(serverUrl, options);</span>
+<span class="nc" id="L115">        return new AndroidDriver(serverUrl, options);</span>
     }
 
     /**
@@ -114,28 +121,40 @@ public class DriverFactory {
      * @return O AppiumDriver da thread atual, ou null se não houver.
      */
     public synchronized AppiumDriver getDriver() {
-<span class="fc" id="L117">        return driverThreadLocal.get();</span>
+<span class="fc" id="L124">        return driverThreadLocal.get();</span>
     }
+
+    /**
+     *
+     * Permite a injeção de um mock driver diretamente na ThreadLocal.
+     * Essencial para testar unitariamente as classes (como CommonActions)
+     * que dependem de um getDriver() ativo.
+     *
+     * @param driver O mock de AppiumDriver a ser injetado.
+     */
+    public synchronized void setDriver(AppiumDriver driver) {
+<span class="fc" id="L136">        driverThreadLocal.set(driver);</span>
+<span class="fc" id="L137">    }</span>
 
     /**
      * Encerra a sessão do driver (quit()) e remove a instância da ThreadLocal
      * para a thread atual.
      */
     public synchronized void quitDriver() {
-<span class="fc" id="L125">        AppiumDriver driver = driverThreadLocal.get();</span>
-<span class="fc bfc" id="L126" title="All 2 branches covered.">        if (driver != null) {</span>
+<span class="fc" id="L144">        AppiumDriver driver = driverThreadLocal.get();</span>
+<span class="fc bfc" id="L145" title="All 2 branches covered.">        if (driver != null) {</span>
             try {
-<span class="fc" id="L128">                LoggerHelper.info(&quot;Encerrando driver... Session ID: {}&quot;, driver.getSessionId());</span>
-<span class="fc" id="L129">                driver.quit();</span>
-<span class="nc" id="L130">            } catch (Exception e) {</span>
-<span class="nc" id="L131">                LoggerHelper.error(&quot;Erro ao tentar encerrar o driver. A sessão pode já estar fechada.&quot;, e);</span>
+<span class="fc" id="L147">                LoggerHelper.info(&quot;Encerrando driver... Session ID: {}&quot;, driver.getSessionId());</span>
+<span class="fc" id="L148">                driver.quit();</span>
+<span class="nc" id="L149">            } catch (Exception e) {</span>
+<span class="nc" id="L150">                LoggerHelper.error(&quot;Erro ao tentar encerrar o driver. A sessão pode já estar fechada.&quot;, e);</span>
             } finally {
-<span class="fc" id="L133">                driverThreadLocal.remove();</span>
-<span class="fc" id="L134">                LoggerHelper.info(&quot;Driver removido da ThreadLocal.&quot;);</span>
-<span class="fc" id="L135">            }</span>
+<span class="fc" id="L152">                driverThreadLocal.remove();</span>
+<span class="fc" id="L153">                LoggerHelper.info(&quot;Driver removido da ThreadLocal.&quot;);</span>
+<span class="fc" id="L154">            }</span>
         } else {
-<span class="fc" id="L137">            LoggerHelper.debug(&quot;Nenhum driver para encerrar na thread atual.&quot;);</span>
+<span class="fc" id="L156">            LoggerHelper.debug(&quot;Nenhum driver para encerrar na thread atual.&quot;);</span>
         }
-<span class="fc" id="L139">    }</span>
+<span class="fc" id="L158">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

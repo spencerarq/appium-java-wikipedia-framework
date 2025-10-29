@@ -1,10 +1,6 @@
 GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
-Appium Wikipedia Framework - Mobile Test Automation,com.wikipedia.pages,ArticlePage,3,0,0,0,1,0,1,0,1,0
-Appium Wikipedia Framework - Mobile Test Automation,com.wikipedia.pages,SearchPage,3,0,0,0,1,0,1,0,1,0
-Appium Wikipedia Framework - Mobile Test Automation,com.wikipedia.pages,SettingsPage,3,0,0,0,1,0,1,0,1,0
-Appium Wikipedia Framework - Mobile Test Automation,com.wikipedia.pages,SavedPage,3,0,0,0,1,0,1,0,1,0
-Appium Wikipedia Framework - Mobile Test Automation,com.wikipedia.utils,TestHelper,3,0,0,0,1,0,1,0,1,0
-Appium Wikipedia Framework - Mobile Test Automation,com.wikipedia.utils,LoggerHelper,7,44,2,2,2,19,2,10,0,10
-Appium Wikipedia Framework - Mobile Test Automation,com.wikipedia.utils,ConfigReader,53,153,6,12,10,42,8,15,3,11
-Appium Wikipedia Framework - Mobile Test Automation,com.wikipedia.commons,CommonActions,3,0,0,0,1,0,1,0,1,0
-Appium Wikipedia Framework - Mobile Test Automation,com.wikipedia.commons,DriverFactory,20,153,0,4,6,41,1,8,1,6
+Appium Wikipedia Framework - Mobile Test Automation,com.wikipedia.utils,TestHelper,8,157,1,13,2,35,1,9,0,3
+Appium Wikipedia Framework - Mobile Test Automation,com.wikipedia.utils,LoggerHelper,0,51,2,2,0,21,2,10,0,10
+Appium Wikipedia Framework - Mobile Test Automation,com.wikipedia.utils,ConfigReader,52,154,3,15,14,38,10,13,7,7
+Appium Wikipedia Framework - Mobile Test Automation,com.wikipedia.commons,CommonActions,38,415,2,28,8,92,2,25,0,12
+Appium Wikipedia Framework - Mobile Test Automation,com.wikipedia.commons,DriverFactory,106,75,2,2,27,23,3,8,2,7

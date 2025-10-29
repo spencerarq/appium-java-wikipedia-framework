@@ -42,7 +42,7 @@ public class LoggerHelper {
     public static void debug(String message) {
         // Verifica se o nível DEBUG está habilitado antes de logar (performance)
 <span class="pc bpc" id="L44" title="1 of 2 branches missed.">        if (logger.isDebugEnabled()) {</span>
-<span class="nc" id="L45">            logger.debug(message);</span>
+<span class="fc" id="L45">            logger.debug(message);</span>
         }
 <span class="fc" id="L47">    }</span>
 
@@ -53,7 +53,7 @@ public class LoggerHelper {
      */
     public static void debug(String format, Object... args) {
 <span class="pc bpc" id="L55" title="1 of 2 branches missed.">        if (logger.isDebugEnabled()) {</span>
-<span class="nc" id="L56">            logger.debug(format, args);</span>
+<span class="fc" id="L56">            logger.debug(format, args);</span>
         }
 <span class="fc" id="L58">    }</span>
 
