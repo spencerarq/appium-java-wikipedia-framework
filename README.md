@@ -241,6 +241,16 @@ appium
 
 ---
 
+## 📹 Demonstração
+
+### TC01 - Pesquisa e Visualização de Artigo
+
+![TC01 Demo](docs/gifs/testSearchArticleSuccess_20251130_123447.gif)
+
+*Fluxo completo: Pesquisar "Appium" → Fechar banner → Selecionar resultado → Validar título*
+
+---
+
 ## Execução dos Testes
 
 ### Testes Unitários (JUnit 5)
