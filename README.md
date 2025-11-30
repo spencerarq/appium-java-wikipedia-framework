@@ -29,7 +29,6 @@
 - [Agradecimentos](#agradecimentos)
 - [Status do Projeto](#status-do-projeto)
 
-
 ---
 
 ## Sobre o Projeto
@@ -261,13 +260,13 @@ mvn clean test jacoco:report
 ### Testes E2E (TestNG)
 ```bash
 # Executar todos os testes E2E
-mvn test -Dtest="**/*E2ETest"
+mvn test -Pe2e-tests
 
-# Executar suite específica
-mvn test -DsuiteXmlFile=testng-smoke.xml
+# Executar suite smoke (rápido)
+mvn test -Psmoke-tests
 
 # Com relatório Allure
-mvn clean test allure:serve
+mvn clean test -Pe2e-tests allure:serve
 ```
 
 **Relatório:** Abre automaticamente no navegador
@@ -289,6 +288,7 @@ appium-java-wikipedia-framework/
 │   │   ├── pages/              # Page Object Model
 │   │   │   ├── SearchPage.java
 │   │   │   ├── ArticlePage.java
+│   │   │   ├── OnboardingPage.java
 │   │   │   ├── SavedPage.java
 │   │   │   └── SettingsPage.java
 │   │   │
@@ -305,34 +305,40 @@ appium-java-wikipedia-framework/
 │     │  ├── unit/               # Testes Unitários (JUnit 5)
 │     │  │   ├── CommonActionsUnitTest.java
 │     │  │   ├── DriverFactoryUnitTest.java
-│     │  │   └── TestHelperUnitTest.java
+│     │  │   ├── TestHelperUnitTest.java
+│     │  │   ├── ConfigReaderUnitTest.java
+│     │  │   └── LoggerHelperUnitTest.java
 │     │  │
-│     │  └── e2e/                # Testes E2E (TestNG)
-│     │      ├── TC01_SearchArticleE2ETest.java
-│     │      ├── TC02_NoResultsE2ETest.java
-│     │      ├── TC03a_SaveArticleE2ETest.java
-│     │      ├── TC03b_RemoveArticleE2ETest.java
-│     │      ├── TC04_ChangeLanguageE2ETest.java
-│     │      ├── TC05_BackgroundE2ETest.java
-│     │      ├── TC06_RotationE2ETest.java
-│     │      └── TC07_ScrollE2ETest.java
+│     │  ├── e2e/                # Testes E2E (TestNG)
+│     │  │   ├── TC01_SearchArticleE2ETest.java
+│     │  │   ├── TC02_NoResultsE2ETest.java
+│     │  │   ├── TC03a_SaveArticleE2ETest.java
+│     │  │   ├── TC03b_RemoveArticleE2ETest.java
+│     │  │   ├── TC04_ChangeLanguageE2ETest.java
+│     │  │   ├── TC05_BackgroundE2ETest.java
+│     │  │   ├── TC06_RotationE2ETest.java
+│     │  │   └── TC07_ScrollE2ETest.java
+│     │  │
+│     │  ├── integration/        # Testes Integração
+│     │  │   └── driver/
+│     │  │       └── DriverFactoryIntegrationTest.java
+│     │  │
+│     │  └── listeners/          # Listeners TestNG
+│     │      └── VideoRecordingListener.java
 │     │
-│     └── integration.driver/      # Testes Integração
-│            └── DriverFactoryIntegrationTest.java
-│
-├── src/test/resources/
-│   ├── config.properties       # Configurações do projeto
-│   ├── testng.xml              # Suite completa
-│   ├── testng-smoke.xml        # Suite smoke
-│   └── allure.properties       # Configurações Allure
+│     └── resources/
+│         ├── config.properties       # Configurações do projeto
+│         ├── testng.xml              # Suite completa
+│         ├── testng-smoke.xml        # Suite smoke
+│         └── allure.properties       # Configurações Allure
 │
 ├── .github/
 │   └── workflows/
 │       └── ci.yml              # GitHub Actions pipeline
 │
 ├── pom.xml                     # Dependências Maven
-├── README.md                   # Este arquivo
 ├── .gitignore
+├── README.md                   # Este arquivo
 └── LICENSE
 ```
 
@@ -351,12 +357,8 @@ appium-java-wikipedia-framework/
 
 **Gerar e visualizar:**
 ```bash
-mvn clean test allure:serve
+mvn clean test -Pe2e-tests allure:serve
 ```
-
-**Exemplo de visualização:**
-
-[Allure Report](https://github.com/allure-framework/allure2/raw/master/.github/readme-img.png)
 
 ### JaCoCo Report
 
@@ -418,12 +420,19 @@ mvn jacoco:check
 
 ## Roadmap
 
-### Fase 1 - Fundação (Concluída)
+### Fase 1 - Fundação (Em Progresso)
 - [x] Setup do projeto Maven
 - [x] Implementação do POM
 - [x] Commons/Actions
 - [x] Testes unitários (10-15)
-- [x] Testes E2E críticos (7)
+- [x] **TC01 - Pesquisa de Artigo (E2E)** ✅ Implementado
+- [x] **TC02 - Pesquisa sem Resultados (E2E)** ✅ Implementado
+- [ ] TC03a - Salvar Artigo (E2E)
+- [ ] TC03b - Remover Artigo (E2E)
+- [ ] TC04 - Alterar Idioma (E2E)
+- [ ] TC05 - Background/Foreground (E2E)
+- [ ] TC06 - Rotação de Tela (E2E)
+- [ ] TC07 - Scroll (E2E)
 - [x] JaCoCo + Allure
 - [ ] GitHub Actions
 
@@ -448,14 +457,14 @@ mvn jacoco:check
 
 | ID | Cenário | Tipo | Prioridade | Status |
 |----|---------|------|------------|--------|
-| TC01 | Pesquisar e visualizar artigo "Appium" | Positivo | P0 | ✅ |
-| TC02 | Pesquisa sem resultados (UUID dinâmico) | Negativo | P1 | ✅ |
-| TC03a | Salvar artigo "Java" | Positivo | P0 | ✅ |
-| TC03b | Remover artigo "Java" | Positivo | P0 | ✅ |
-| TC04 | Alterar idioma para Espanhol | Positivo | P1 | ✅ |
-| TC05 | App retorna do background | Positivo | P1 | ✅ |
-| TC06 | Rotação de tela durante pesquisa | Positivo | P2 | ✅ |
-| TC07 | Scroll em artigo longo | Positivo | P2 | ✅ |
+| TC01 | Pesquisar e visualizar artigo "Appium" | Positivo | P0 | ✅ Implementado |
+| TC02 | Pesquisa sem resultados (UUID dinâmico) | Negativo | P1 | ✅ Implementado |
+| TC03a | Salvar artigo "Java" | Positivo | P0 | ⏳ Pendente |
+| TC03b | Remover artigo "Java" | Positivo | P0 | ⏳ Pendente |
+| TC04 | Alterar idioma para Espanhol | Positivo | P1 | ⏳ Pendente |
+| TC05 | App retorna do background | Positivo | P1 | ⏳ Pendente |
+| TC06 | Rotação de tela durante pesquisa | Positivo | P2 | ⏳ Pendente |
+| TC07 | Scroll em artigo longo | Positivo | P2 | ⏳ Pendente |
 
 ### Testes Unitários (10 casos)
 
@@ -500,7 +509,7 @@ Encontrou um bug? Abra uma [issue](https://github.com/spencerarq/appium-java-wik
 **[RENATO SPENCER]**
 
 - 💼 LinkedIn: [https://www.linkedin.com/in/renatospencer/](https://www.linkedin.com/in/renatospencer/)
-- 🐙 GitHub: [github.com/spencerarq](https://github.com/spencerarq)
+- 🎯 GitHub: [github.com/spencerarq](https://github.com/spencerarq)
 
 ---
 

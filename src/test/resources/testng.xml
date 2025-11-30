@@ -1,0 +1,16 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
+<suite name="Wikipedia App Automation Suite - Regression" verbose="1">
+
+    <listeners>
+        <listener class-name="io.qameta.allure.testng.AllureTestNg"/>
+        <listener class-name="com.wikipedia.listeners.VideoRecordingListener"/>
+    </listeners>
+
+    <test name="Search Features">
+        <classes>
+            <class name="com.wikipedia.e2e.TC01_SearchArticleE2ETest" />
+            <class name="com.wikipedia.e2e.TC02_NoResultsE2ETest" />
+        </classes>
+    </test>
+
+</suite>

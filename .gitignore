@@ -1,0 +1,94 @@
+# Maven
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+# IDE - IntelliJ
+.idea/
+*.iml
+*.iws
+*.ipr
+*.ids
+*.orig
+
+# IDE - VSCode
+.vscode/
+*.code-workspace
+
+# IDE - Eclipse
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# OS
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# Logs
+logs/
+*.log
+*.log.*
+
+# Test Reports e Resultados
+surefire-reports/
+allure-results/
+allure-report/
+jacoco.exec
+coverage.xml
+
+# Screenshots e Vídeos de Testes
+target/screenshots/
+target/videos/
+
+# Build
+bin/
+build/
+*.class
+*.jar
+*.war
+*.ear
+*.zip
+*.rar
+
+# Ambiente Local
+.env
+.env.local
+*.properties.local
+
+# Node (se usar ferramentas frontend)
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Gradle (se aplicável)
+.gradle/
+gradlew
+gradlew.bat
+
+# JetBrains
+.idea/caches/
+.idea/libraries/
+.idea/modules.xml
+.idea/misc.xml
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/vcs.xml
+.idea/dictionaries/
+.idea/inspectionProfiles/
+.idea/encodings.xml
+.idea/projectCodeStyle.xml
+.idea/runConfigurations.xml
+*.iml
